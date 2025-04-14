@@ -1,6 +1,6 @@
 set(
     GL_SOURCE
-    "source/gl/gl.c"
+    "source/glad/gl.c"
 )
 
 add_library(gl ${GL_SOURCE})

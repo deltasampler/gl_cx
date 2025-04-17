@@ -2,7 +2,8 @@
 
 #include "directive.h"
 
-bool directive_scan(directive_t& directive, const char* line, size_t len) {
+bool directive_scan(directive_t& directive, const char* line) {
+    usize len = cstr_len(line);
     directive.type = DIRECTIVE_TYPE::INVALID;
 
     // minimal directive: #type vertex
@@ -10,7 +11,7 @@ bool directive_scan(directive_t& directive, const char* line, size_t len) {
         return false;
     }
 
-    size_t i = 0;
+    usize i = 0;
     char c = line[i++];
 
     // skip whitespace
@@ -35,7 +36,7 @@ bool directive_scan(directive_t& directive, const char* line, size_t len) {
     }
 
     // extract key
-    size_t key_len = 0;
+    usize key_len = 0;
 
     while (is_alpha(c) && i < len && key_len < DIRECTIVE_KEY_CAP) {
         directive.key[key_len++] = c;
@@ -62,7 +63,7 @@ bool directive_scan(directive_t& directive, const char* line, size_t len) {
     }
 
     // extract value
-    size_t value_len = 0;
+    usize value_len = 0;
 
     if (type == DIRECTIVE_TYPE::INVALID) {
         return false;

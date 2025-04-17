@@ -1,5 +1,5 @@
 #pragma once
-#include <stdlib.h>
+#include <cl/type.h>
 
 // directive
 #define DIRECTIVE_KEY_CAP 8
@@ -18,4 +18,4 @@ struct directive_t {
     char value[DIRECTIVE_VALUE_CAP];
 };
 
-bool directive_scan(directive_t& directive, const char* line, size_t len);
+bool directive_scan(directive_t& directive, const char* line);

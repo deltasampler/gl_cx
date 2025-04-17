@@ -18,9 +18,7 @@ SHADER_TYPE shader_type_from_cstr(const char* cstr) {
 
 void prog_src_load(prog_src_t& prog_src, const char* path) {
     FILE* file = fopen(path, "r");
-    size_t cap = 0;
-    char* line = nullptr;
-    size_t line_len = 0;
+    char line[256];
 
     if (file == nullptr) {
         return;
@@ -28,14 +26,14 @@ void prog_src_load(prog_src_t& prog_src, const char* path) {
 
     directive_t directive;
     SHADER_TYPE type = SHADER_TYPE::INVALID;
-    ssize_t i = -1;
+    ssize i = -1;
 
-    for (size_t i = 0; i < PROG_SRC_SHADER_CAP; i += 1) {
+    for (usize i = 0; i < PROG_SRC_SHADER_CAP; i += 1) {
         prog_src.shaders[i].type = SHADER_TYPE::INVALID;
     }
 
-    while ((line_len = getline(&line, &cap, file)) != -1) {
-        if (directive_scan(directive, line, line_len)) {
+    while (fgets(line, sizeof(line), file)) {
+        if (directive_scan(directive, line)) {
             if (directive.type == DIRECTIVE_TYPE::TYPE) {
                 type = shader_type_from_cstr(directive.value);
 
@@ -63,14 +61,10 @@ void prog_src_load(prog_src_t& prog_src, const char* path) {
     prog_src.len = i + 1;
 
     fclose(file);
-
-    if (line) {
-        free(line);
-    }
 }
 
 void prog_src_del(prog_src_t& prog_src) {
-    for (size_t i = 0; i < prog_src.len; i++) {
+    for (usize i = 0; i < prog_src.len; i++) {
         shader_src_t& shader_src = prog_src.shaders[i];
         dstr_del(shader_src.source);
     }

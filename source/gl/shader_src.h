@@ -21,7 +21,7 @@ struct shader_src_t {
 
 struct prog_src_t {
     shader_src_t shaders[PROG_SRC_SHADER_CAP];
-    size_t len;
+    usize len;
 };
 
 void prog_src_load(prog_src_t& prog_src, const char* path);

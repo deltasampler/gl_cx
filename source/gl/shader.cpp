@@ -3,7 +3,7 @@
 
 #include "shader.h"
 
-uint32_t shader_type(SHADER_TYPE type) {
+u32 shader_type(SHADER_TYPE type) {
     if (type == SHADER_TYPE::VERTEX) {
         return GL_VERTEX_SHADER;
     } else if (type == SHADER_TYPE::FRAGMENT) {
@@ -13,8 +13,8 @@ uint32_t shader_type(SHADER_TYPE type) {
     return 0;
 }
 
-uint32_t shader_create(uint32_t type, const char* source) {
-    uint32_t shader = glCreateShader(type);
+u32 shader_create(u32 type, const char* source) {
+    u32 shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, 0);
     glCompileShader(shader);
 
@@ -28,21 +28,21 @@ uint32_t shader_create(uint32_t type, const char* source) {
     return shader;
 }
 
-int32_t shader_get_compile_status(uint32_t shader) {
-    int32_t compile_status = false;
+s32 shader_get_compile_status(u32 shader) {
+    s32 compile_status = false;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compile_status);
 
     return compile_status;
 }
 
-void shader_print_info_log(uint32_t shader) {
+void shader_print_info_log(u32 shader) {
     char* info_log = shader_get_info_log(shader);
     printf("%s\n", info_log);
     delete info_log;
 }
 
-char* shader_get_info_log(uint32_t shader) {
-    int32_t info_log_length = 0;
+char* shader_get_info_log(u32 shader) {
+    s32 info_log_length = 0;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
 
     char* info_log = new char[info_log_length];
@@ -51,13 +51,13 @@ char* shader_get_info_log(uint32_t shader) {
     return info_log;
 }
 
-uint32_t program_create(prog_src_t& prog_src) {
-    uint32_t shaders[PROG_SRC_SHADER_CAP];
-    size_t shaders_len = 0;
+u32 program_create(prog_src_t& prog_src) {
+    u32 shaders[PROG_SRC_SHADER_CAP];
+    usize shaders_len = 0;
 
-    for (size_t i = 0; i < prog_src.len; i += 1) {
+    for (usize i = 0; i < prog_src.len; i += 1) {
         shader_src_t& shader_src = prog_src.shaders[i];
-        uint32_t shader = shader_create(shader_type(shader_src.type), shader_src.source.data);
+        u32 shader = shader_create(shader_type(shader_src.type), shader_src.source.data);
 
         if (!shader) {
             for (int j = 0; j < shaders_len; j += 1) {
@@ -70,16 +70,16 @@ uint32_t program_create(prog_src_t& prog_src) {
         shaders[shaders_len++] = shader;
     }
 
-    uint32_t program = glCreateProgram();
+    u32 program = glCreateProgram();
 
-    for (size_t i = 0; i < shaders_len; i += 1) {
+    for (usize i = 0; i < shaders_len; i += 1) {
         glAttachShader(program, shaders[i]);
     }
 
     glLinkProgram(program);
 
-    for (size_t i = 0; i < shaders_len; i += 1) {
-        uint32_t shader = shaders[i];
+    for (usize i = 0; i < shaders_len; i += 1) {
+        u32 shader = shaders[i];
         glDetachShader(program, shader);
         glDeleteShader(shader);
     }
@@ -94,21 +94,21 @@ uint32_t program_create(prog_src_t& prog_src) {
     return program;
 }
 
-int32_t program_get_link_status(uint32_t program) {
-    int32_t link_status;
+s32 program_get_link_status(u32 program) {
+    s32 link_status;
     glGetProgramiv(program, GL_LINK_STATUS, &link_status);
 
     return link_status;
 }
 
-void program_print_info_log(uint32_t program) {
+void program_print_info_log(u32 program) {
     char* info_log = program_get_info_log(program);
     printf("%s\n", info_log);
     delete info_log;
 }
 
-char* program_get_info_log(uint32_t program) {
-    int32_t info_log_length = 0;
+char* program_get_info_log(u32 program) {
+    s32 info_log_length = 0;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
 
     char* info_log = new char[info_log_length];

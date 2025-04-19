@@ -1,6 +1,6 @@
 #pragma once
 #include <stdlib.h>
-#include <cl/dstr.h>
+#include <cl/string/dstr.h>
 
 // shader source
 enum class SHADER_TYPE {
@@ -17,10 +17,10 @@ struct shader_src_t {
 };
 
 // program source
-#define PROG_SRC_SHADER_CAP 4
+#define PROG_SHADER_CAP 4
 
 struct prog_src_t {
-    shader_src_t shaders[PROG_SRC_SHADER_CAP];
+    shader_src_t shaders[PROG_SHADER_CAP];
     usize len;
 };
 

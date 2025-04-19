@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <cl/cstr.h>
+#include <cl/string/cstr.h>
 #include "directive.h"
 
 #include "shader_src.h"
@@ -28,7 +28,7 @@ void prog_src_load(prog_src_t& prog_src, const char* path) {
     SHADER_TYPE type = SHADER_TYPE::INVALID;
     ssize i = -1;
 
-    for (usize i = 0; i < PROG_SRC_SHADER_CAP; i += 1) {
+    for (usize i = 0; i < PROG_SHADER_CAP; i += 1) {
         prog_src.shaders[i].type = SHADER_TYPE::INVALID;
     }
 
@@ -45,7 +45,7 @@ void prog_src_load(prog_src_t& prog_src, const char* path) {
             }
         }
 
-        if (i > -1 && i < PROG_SRC_SHADER_CAP) {
+        if (i > -1 && i < PROG_SHADER_CAP) {
             shader_src_t& shader_src = prog_src.shaders[i];
 
             if (shader_src.type == SHADER_TYPE::INVALID) {

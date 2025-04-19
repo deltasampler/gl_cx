@@ -1,5 +1,5 @@
 #pragma once
-#include <cl/type.h>
+#include <cl/types.h>
 
 // directive
 #define DIRECTIVE_KEY_CAP 8

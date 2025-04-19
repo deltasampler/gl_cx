@@ -52,7 +52,7 @@ char* shader_get_info_log(u32 shader) {
 }
 
 u32 program_create(prog_src_t& prog_src) {
-    u32 shaders[PROG_SRC_SHADER_CAP];
+    u32 shaders[PROG_SHADER_CAP];
     usize shaders_len = 0;
 
     for (usize i = 0; i < prog_src.len; i += 1) {
@@ -60,7 +60,7 @@ u32 program_create(prog_src_t& prog_src) {
         u32 shader = shader_create(shader_type(shader_src.type), shader_src.source.data);
 
         if (!shader) {
-            for (int j = 0; j < shaders_len; j += 1) {
+            for (usize j = 0; j < shaders_len; j += 1) {
                 glDeleteShader(shaders[j]);
             }
 
@@ -115,4 +115,15 @@ char* program_get_info_log(u32 program) {
     glGetProgramInfoLog(program, info_log_length, &info_log_length, info_log);
 
     return info_log;
+}
+
+u32 program_load(const char* path) {
+    prog_src_t program_source;
+    prog_src_load(program_source, path);
+
+    u32 program = program_create(program_source);
+
+    prog_src_del(program_source);
+
+    return program;
 }

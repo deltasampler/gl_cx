@@ -13,3 +13,5 @@ u32 program_create(prog_src_t& prog_src);
 s32 program_get_link_status(u32 program);
 void program_print_info_log(u32 program);
 char* program_get_info_log(u32 program);
+
+u32 program_load(const char* path);

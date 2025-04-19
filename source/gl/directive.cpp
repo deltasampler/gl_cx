@@ -1,4 +1,5 @@
-#include <cl/cstr.h>
+#include <cl/string/cstr.h>
+#include <cl/compiler/scanner.h>
 
 #include "directive.h"
 

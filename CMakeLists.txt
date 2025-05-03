@@ -1,3 +1,5 @@
+add_compile_definitions(MODULE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/")
+
 set(
     GLAD_SOURCE
     "source/glad/gl.c"

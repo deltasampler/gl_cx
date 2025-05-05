@@ -13,6 +13,14 @@ SHADER_TYPE shader_type_from_cstr(const char* cstr) {
         return SHADER_TYPE::FRAGMENT;
     }
 
+    if (cstr_cmp(cstr, "geometry")) {
+        return SHADER_TYPE::GEOMETRY;
+    }
+
+    if (cstr_cmp(cstr, "compute")) {
+        return SHADER_TYPE::COMPUTE;
+    }
+
     return SHADER_TYPE::INVALID;
 }
 

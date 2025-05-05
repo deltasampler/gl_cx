@@ -6,7 +6,9 @@
 enum class SHADER_TYPE {
     INVALID,
     VERTEX,
-    FRAGMENT
+    FRAGMENT,
+    GEOMETRY,
+    COMPUTE
 };
 
 SHADER_TYPE shader_type_from_cstr(const char* cstr);

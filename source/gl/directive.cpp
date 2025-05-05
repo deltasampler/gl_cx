@@ -80,7 +80,12 @@ bool directive_scan(directive_t& directive, const char* line) {
 
         directive.value[value_len] = '\0';
 
-        if (!cstr_cmp(directive.value, "vertex") && !cstr_cmp(directive.value, "fragment")) {
+        if (
+            !cstr_cmp(directive.value, "vertex") &&
+            !cstr_cmp(directive.value, "fragment") &&
+            !cstr_cmp(directive.value, "geometry") &&
+            !cstr_cmp(directive.value, "compute")
+        ) {
             return false;
         }
     } else if (type == DIRECTIVE_TYPE::INCLUDE_REL) {

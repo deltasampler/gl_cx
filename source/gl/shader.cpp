@@ -8,6 +8,10 @@ u32 shader_type(SHADER_TYPE type) {
         return GL_VERTEX_SHADER;
     } else if (type == SHADER_TYPE::FRAGMENT) {
         return GL_FRAGMENT_SHADER;
+    } else if (type == SHADER_TYPE::GEOMETRY) {
+        return GL_GEOMETRY_SHADER;
+    } else if (type == SHADER_TYPE::COMPUTE) {
+        return GL_COMPUTE_SHADER;
     }
 
     return 0;
@@ -19,6 +23,7 @@ u32 shader_create(u32 type, const char* source) {
     glCompileShader(shader);
 
     if (!shader_get_compile_status(shader)) {
+        printf("Failed to compile shader\n");
         shader_print_info_log(shader);
         glDeleteShader(shader);
 
@@ -85,6 +90,7 @@ u32 program_create(prog_src_t& prog_src) {
     }
 
     if (!program_get_link_status(program)) {
+        printf("Failed to link program\n");
         program_print_info_log(program);
         glDeleteProgram(program);
 

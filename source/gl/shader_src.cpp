@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <cl/string/cstr.h>
+#include <cl/string/fstr.h>
 #include "directive.h"
 
 #include "shader_src.h"
@@ -24,21 +25,15 @@ SHADER_TYPE shader_type_from_cstr(const char* cstr) {
     return SHADER_TYPE::INVALID;
 }
 
-void prog_src_load(prog_src_t& prog_src, const char* path) {
+bool prog_src_load(prog_src_t& prog_src, const char* path, ssize i, SHADER_TYPE type) {
     FILE* file = fopen(path, "r");
     char line[256];
 
     if (file == nullptr) {
-        return;
+        return false;
     }
 
     directive_t directive;
-    SHADER_TYPE type = SHADER_TYPE::INVALID;
-    ssize i = -1;
-
-    for (usize i = 0; i < PROG_SHADER_CAP; i += 1) {
-        prog_src.shaders[i].type = SHADER_TYPE::INVALID;
-    }
 
     while (fgets(line, sizeof(line), file)) {
         if (directive_scan(directive, line)) {
@@ -50,6 +45,23 @@ void prog_src_load(prog_src_t& prog_src, const char* path) {
 
                     continue;
                 }
+            } else if (directive.type == DIRECTIVE_TYPE::INCLUDE_REL) {
+                fstr_t str;
+                fstr_assign(str, path);
+                usize index = str.len - 1;
+
+                while (fstr_at(str, index) != '/' && fstr_at(str, index) != '\\' && index >= 0) {
+                    index -= 1;
+                }
+
+                str.len = index + 1;
+                fstr_concat(str, directive.value);
+
+                if (!prog_src_load(prog_src, str.data, i, type)) {
+                    printf("Failed to load file: %s\n", str.data);
+                }
+
+                continue;
             }
         }
 
@@ -69,6 +81,18 @@ void prog_src_load(prog_src_t& prog_src, const char* path) {
     prog_src.len = i + 1;
 
     fclose(file);
+
+    return true;
+}
+
+void prog_src_load(prog_src_t& prog_src, const char* path) {
+    SHADER_TYPE type = SHADER_TYPE::INVALID;
+
+    for (usize i = 0; i < PROG_SHADER_CAP; i += 1) {
+        prog_src.shaders[i].type = SHADER_TYPE::INVALID;
+    }
+
+    prog_src_load(prog_src, path, -1, type);
 }
 
 void prog_src_del(prog_src_t& prog_src) {

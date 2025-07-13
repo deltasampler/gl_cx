@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <cl/string/cstr.h>
-#include <cl/string/fstr.h>
+#include <cl/string/sstr.h>
 #include "directive.h"
 
 #include "shader_src.h"
@@ -46,16 +46,16 @@ bool prog_src_load(prog_src_t& prog_src, const char* path, ssize i, SHADER_TYPE 
                     continue;
                 }
             } else if (directive.type == DIRECTIVE_TYPE::INCLUDE_REL) {
-                fstr_t str;
-                fstr_assign(str, path);
+                char str_[256]; sstr_t str = sstr_new(str_, sizeof(str_));
+                sstr_assign(str, path);
                 usize index = str.len - 1;
 
-                while (fstr_at(str, index) != '/' && fstr_at(str, index) != '\\' && index >= 0) {
+                while (sstr_at(str, index) != '/' && sstr_at(str, index) != '\\' && index >= 0) {
                     index -= 1;
                 }
 
                 str.len = index + 1;
-                fstr_concat(str, directive.value);
+                sstr_concat(str, directive.value);
 
                 if (!prog_src_load(prog_src, str.data, i, type)) {
                     printf("Failed to load file: %s\n", str.data);
